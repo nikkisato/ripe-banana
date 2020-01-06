@@ -77,14 +77,23 @@ describe('app routes', () => {
       });
   });
 
-
-  
-
-
-
-
-
-
+  //reviewer routes
+  it('can create a get reviewers', () => {
+    return request(app)
+      .get('/reviewer')
+      .send({
+        name:'Hayao Miyazaki',
+        company: 'Studio Ghibli'
+      })
+      .then(res => {
+        expect(res.body).toEqual[{
+          _id: expect.any(String),
+          name:'Hayao Miyazaki',
+          company: 'Studio Ghibli',
+          __v: 0
+        }];
+      });
+  });
 
 });
 
