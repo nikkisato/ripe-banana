@@ -37,24 +37,48 @@ describe('app routes', () => {
       });
   });
 
-  it('can create a get actors names by ID', () => {
+  it('can create a get actors names by Id', () => {
     return request(app)
-      .get(`/actors/${actor.id}`)
+      .get(`/actors/${actor._id}`)
       .send({
-        name:'Corgi Godzilla'
+        name:'Corgi Godzilla',
+        dob: 'April 19, 1954',
+        pob: 'Tokyo Japan'
+      })
+      .then(res => {
+        expect(res.body).toEqual({
+          _id: expect.any(String),
+          name:'Corgi Godzilla',
+          dob: expect.any(String),
+          pob: 'Tokyo Japan',
+          __v: 0,
+          //need to add films here
+          // films: [{
+          //   id,
+          //   title,
+          //   released
+        });
+      });
+  });
+
+  //Studio routes
+  it('can create a get studios names', () => {
+    return request(app)
+      .get('/studios')
+      .send({
+        name:'Studio Ghibli'
       })
       .then(res => {
         expect(res.body).toEqual[{
           _id: expect.any(String),
-          name:'Corgi Godzilla',
+          name:'Studio Ghibli',
           __v: 0
         }];
       });
   });
 
-  //Studio routes
 
-
+  
 
 
 
@@ -63,3 +87,8 @@ describe('app routes', () => {
 
 
 });
+
+
+
+
+
