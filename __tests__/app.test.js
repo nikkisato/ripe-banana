@@ -189,17 +189,16 @@ describe('app routes', () => {
       });
   });
 
-
   it('can get reviewers', () => {
     return request(app)
       .get('/reviewer')
       .then(res => {
-        expect(res.body).toEqual[{
+        expect(res.body).toEqual([{
           _id: expect.any(String),
           name:'Hayao Miyazaki',
           company: 'Studio Ghibli',
           __v: 0
-        }];
+        }]);
       });
   });
 
@@ -233,16 +232,18 @@ describe('app routes', () => {
         }]
       })
       .then(res => {
+        console.log(res.body);
+        
         expect(res.body).toEqual({
-          _id: expect.any(String),
+          _id:  expect.any(String),
           __v: 0,
           title:'Godzilla',
           released:1964,
-          studio: studio._id,
+          studio: studio._id.toString(),
           cast: [{ 
             _id: expect.any(String),
             role: 'Godzilla',
-            actor: expect.any(String) 
+            actor: actor._id.toString() 
           }]
         });
       });
@@ -270,18 +271,17 @@ describe('app routes', () => {
   it('can get film by id', () => {
     return request(app)
       .get(`/films/${film._id}`)
-      .then(res => {
-
+      .then(res => {  
         expect(res.body).toEqual({
           _id: expect.any(String),
           title: 'Godzilla',
           released: 1964,
           __v: 0,
-          studio: studio._id,
+          studio: studio._id.toString(),
           cast: [{ 
             _id: expect.any(String),
             role: 'Godzilla', 
-            actor: actor._id 
+            actor: actor._id.toString() 
           }],
         });
       });
