@@ -8,6 +8,8 @@ const Actor = require('../lib/models/Actor');
 const Studio = require('../lib/models/Studio');
 const Film = require('../lib/models/Film');
 const Reviewer = require('../lib/models/Reviewer');
+// const Review = require('../lib/models/Review');
+
 const mongoose = require('mongoose');
 
 describe('app routes', () => {
@@ -16,8 +18,12 @@ describe('app routes', () => {
   });
 
 
-  let studio;
   let actor;
+  let actors = [];
+  let film;
+  let films = [];
+  let studio;
+
   beforeEach(() => {
     return mongoose.connection.dropDatabase();
 
@@ -26,14 +32,9 @@ describe('app routes', () => {
   beforeEach(async() => {
     actor = await Actor
       .create({
-        films: [{
-          id:'1234',
-          title: 'Corgi Land',
-          released: 1964 
-        }],
-        name:'Corgi Godzilla',
         dob: '1954-04-19',
-        pob: 'Tokyo Japan'
+        pob: 'Tokyo Japan',
+        name:'Corgi Godzilla',
       });
 
     studio = await Studio
@@ -41,15 +42,25 @@ describe('app routes', () => {
         name:'Studio Ghibli',
         address:'1 Chome-1-83 Shimorenjaku, Mitaka, Tokyo 181-0013, Japan',
         films: [{
-          _id:'1234',
+          _id: '1234',
           title: 'Godzilla'
         }],
       });
 
-    reviewer = await Reviewer 
+    // reviewer = await Reviewer 
+    //   .create({
+    //     name:'Hayao Miyazaki',
+    //     company: 'Studio Ghibli'
+    //   });
+
+    film = await Film
       .create({
-        name:'Hayao Miyazaki',
-        company: 'Studio Ghibli'
+        title:'Godzilla',
+        released:1964,
+        studio: studio._id,
+        cast: [{ 
+          role: 'Godzilla', 
+          actor: actor._id }]
       });
   });
 
@@ -57,17 +68,39 @@ describe('app routes', () => {
     return mongoose.connection.close();
   });
 
-
   //actor routes
+  it('can create a new actor', () => {
+    return request(app)
+      .post('/actors')
+      .send({
+        dob: '1954-04-19',
+        pob: 'Tokyo Japan',
+        name:'Corgi Godzilla',
+      })
+      .then(res => {
+        expect(res.body).toEqual({
+          _id: expect.any(String),
+          dob: '1954-04-19T00:00:00.000Z',
+          pob: 'Tokyo Japan',
+          name:'Corgi Godzilla',
+          __v: 0
+        });
+
+      });
+  });
+ 
+
   it('can get all actors names', () => {
     return request(app)
       .get('/actors')
       .then(res => {
-        expect(res.body).toEqual[{
-          _id: expect.any(String),
-          name:'Corgi Godzilla',
-          __v: 0
-        }];
+        actors.forEach(actor => {
+          expect(res.body).toContain({
+            _id: actor._id.toString(),
+            name:'Corgi Godzilla',
+            __v: 0
+          });
+        });
       });
   });
 
@@ -80,15 +113,16 @@ describe('app routes', () => {
           name:'Corgi Godzilla',
           dob: '1954-04-19T00:00:00.000Z',
           pob: 'Tokyo Japan',
+          // films: [{
+          //   _id:
+          //   title: 
+          //   released
+          // }]
           __v: 0,
-          films: [{
-            id:'1234',
-            title: 'Corgi Land',
-            released: 1964 
-          }]
         });
       });
   });
+
 
   //Studio routes
   it('can create a get studios names', () => {
@@ -113,7 +147,8 @@ describe('app routes', () => {
           name:'Studio Ghibli',
           address:'1 Chome-1-83 Shimorenjaku, Mitaka, Tokyo 181-0013, Japan',
           films: [{
-            _id:'1234',
+            //changed this one
+            _id: expect.any(String),
             title: 'Godzilla'
           }],
           __v: 0
@@ -122,7 +157,7 @@ describe('app routes', () => {
   });
 
   //reviewer routes
-  it('can create a get reviewers', () => {
+  it('can get reviewers', () => {
     return request(app)
       .get('/reviewer')
       .then(res => {
@@ -136,7 +171,7 @@ describe('app routes', () => {
   });
 
 
-  it('can create a get reviewers by id', () => {
+  it('can get reviewers by id', () => {
     return request(app)
       .get('/reviewer')
       .then(res => {
@@ -144,15 +179,80 @@ describe('app routes', () => {
           _id: expect.any(String),
           name:'Hayao Miyazaki',
           company: 'Studio Ghibli',
+          //need to add reviews
           __v: 0
         }];
       });
   });
 
-  
+
+  //Film routes
+  it('can create a new film', () => {
+    return request(app)
+      .post('/films')
+      .send({
+        title: 'Godzilla', 
+        released: 1964,
+        studio: studio._id,
+        cast: [{ 
+          role: 'Godzilla', 
+          actor: actor._id 
+        }]
+      })
+      .then(res => {
+        expect(res.body).toEqual({
+          _id: expect.any(String),
+          __v: 0,
+          title:'Godzilla',
+          released:1964,
+          studio: studio._id,
+          cast: [{ 
+            _id: expect.any(String),
+            role: 'Godzilla',
+            actor: expect.any(String) 
+          }]
+        });
+      });
+  });
+
+  it('can get all Films', () => {
+    return request(app)
+      .get('/films')
+      .then(res => {
+        films.forEach(film => {
+          expect(res.body).toEqual({
+            _id: film._id.toString(),
+            __v: 0,
+            title:'Godzilla',
+            released: 1964,
+            studio: studio._id,
+          });
+        });
+      });
+  });
+
+
+  it('can get film by id', () => {
+    return request(app)
+      .get(`/films/${film._id}`)
+      .then(res => {
+
+        expect(res.body).toEqual({
+          _id: expect.any(String),
+          title: 'Godzilla',
+          released: 1964,
+          __v: 0,
+          studio: studio._id,
+          cast: [{ 
+            _id: expect.any(String),
+            role: 'Godzilla', 
+            actor: actor._id 
+          }],
+        });
+      });
+  });
+
 });
-
-
 
 
 
