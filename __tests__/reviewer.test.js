@@ -68,57 +68,50 @@ describe('app routes', () => {
     return mongoose.connection.close();
   });
 
-  
-
-  //Studio routes
-  it('can create studios names', () => {
+  //reviewer routes
+  it('can create reviewers', () => {
     return request(app)
-      .post('/studios') 
+      .post('/reviewer')
       .send({
-        name:'Studio Ghibli',
+        name:'Hayao Miyazaki',
+        company:'Studio Ghibli',
       })
       .then(res => {
-        expect(res.body).toEqual[{
+        expect(res.body).toEqual({
           _id: expect.any(String),
-          name:'Studio Ghibli',
+          name:'Hayao Miyazaki',
+          company: 'Studio Ghibli',
           __v: 0
-        }];
+        });
       });
   });
 
-  it('can get studios names', () => {
+  it('can get reviewers', () => {
     return request(app)
-      .get('/studios')
+      .get('/reviewer')
+      .then(res => {
+        expect(res.body).toEqual([{
+          _id: expect.any(String),
+          name:'Hayao Miyazaki',
+          company: 'Studio Ghibli',
+          __v: 0
+        }]);
+      });
+  });
+
+
+  it('can get reviewers by id', () => {
+    return request(app)
+      .get('/reviewer')
       .then(res => {
         expect(res.body).toEqual[{
           _id: expect.any(String),
-          name:'Studio Ghibli',
+          name:'Hayao Miyazaki',
+          company: 'Studio Ghibli',
+          //need to add reviews
           __v: 0
         }];
       });
   });
-
-  //need one for studio id
-  it('can get studios by id', () => {
-    return request(app)
-      .get(`/studios/${studio._id}`)
-      .then(res => {
-        expect(res.body).toEqual[{
-          _id: expect.any(String),
-          name:'Studio Ghibli',
-          address:'1 Chome-1-83 Shimorenjaku, Mitaka, Tokyo 181-0013, Japan',
-          films: [{
-            //changed this one
-            _id: expect.any(String),
-            title: 'Godzilla'
-          }],
-          __v: 0
-        }];
-      });
-  });
-
 
 });
-
-
-
