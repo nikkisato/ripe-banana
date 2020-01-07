@@ -8,7 +8,7 @@ const Actor = require('../lib/models/Actor');
 const Studio = require('../lib/models/Studio');
 const Film = require('../lib/models/Film');
 const Reviewer = require('../lib/models/Reviewer');
-// const Review = require('../lib/models/Review');
+const Review = require('../lib/models/Review');
 
 const mongoose = require('mongoose');
 
@@ -47,11 +47,11 @@ describe('app routes', () => {
         }],
       });
 
-    // reviewer = await Reviewer 
-    //   .create({
-    //     name:'Hayao Miyazaki',
-    //     company: 'Studio Ghibli'
-    //   });
+    reviewer = await Reviewer 
+      .create({
+        name:'Hayao Miyazaki',
+        company: 'Studio Ghibli'
+      });
 
     film = await Film
       .create({
@@ -125,7 +125,22 @@ describe('app routes', () => {
 
 
   //Studio routes
-  it('can create a get studios names', () => {
+  it('can create studios names', () => {
+    return request(app)
+      .post('/studios') 
+      .send({
+        name:'Studio Ghibli',
+      })
+      .then(res => {
+        expect(res.body).toEqual[{
+          _id: expect.any(String),
+          name:'Studio Ghibli',
+          __v: 0
+        }];
+      });
+  });
+
+  it('can get studios names', () => {
     return request(app)
       .get('/studios')
       .then(res => {
@@ -138,7 +153,7 @@ describe('app routes', () => {
   });
 
   //need one for studio id
-  it('can create a get studios by id', () => {
+  it('can get studios by id', () => {
     return request(app)
       .get(`/studios/${studio._id}`)
       .then(res => {
@@ -157,6 +172,24 @@ describe('app routes', () => {
   });
 
   //reviewer routes
+  it('can create reviewers', () => {
+    return request(app)
+      .post('/reviewer')
+      .send({
+        name:'Hayao Miyazaki',
+        company:'Studio Ghibli',
+      })
+      .then(res => {
+        expect(res.body).toEqual({
+          _id: expect.any(String),
+          name:'Hayao Miyazaki',
+          company: 'Studio Ghibli',
+          __v: 0
+        });
+      });
+  });
+
+
   it('can get reviewers', () => {
     return request(app)
       .get('/reviewer')
@@ -221,7 +254,8 @@ describe('app routes', () => {
       .then(res => {
         films.forEach(film => {
           expect(res.body).toEqual({
-            _id: film._id.toString(),
+            // _id: film._id.toString(),
+            _id: expect.any(String),
             __v: 0,
             title:'Godzilla',
             released: 1964,
@@ -230,6 +264,7 @@ describe('app routes', () => {
         });
       });
   });
+
 
 
   it('can get film by id', () => {
