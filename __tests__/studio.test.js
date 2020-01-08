@@ -40,17 +40,7 @@ describe('app routes', () => {
     studio = await Studio
       .create({
         name:'Studio Ghibli',
-        address:'1 Chome-1-83 Shimorenjaku, Mitaka, Tokyo 181-0013, Japan',
-        films: [{
-          _id: '1234',
-          title: 'Godzilla'
-        }],
-      });
-
-    reviewer = await Reviewer 
-      .create({
-        name:'Hayao Miyazaki',
-        company: 'Studio Ghibli'
+        address:[{ city: 'Tokyo', state: 'Japan', country: 'Japan', }],
       });
 
     film = await Film
@@ -102,12 +92,11 @@ describe('app routes', () => {
       .then(res => {
         expect(res.body).toEqual[{
           _id: expect.any(String),
-          name:'Studio Ghibli',
-          address:'1 Chome-1-83 Shimorenjaku, Mitaka, Tokyo 181-0013, Japan',
+          name: studio.name,
+          address:[{ _id: expect.any(String), city: 'LA', state: 'Cal', country: 'USA', }],
           films: [{
-          //changed this one
             _id: expect.any(String),
-            title: 'Godzilla'
+            title: expect.any(String)
           }],
           __v: 0
         }];
