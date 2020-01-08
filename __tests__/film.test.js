@@ -76,8 +76,6 @@ describe('app routes', () => {
         }]
       })
       .then(res => {
-        console.log(res.body);
-        
         expect(res.body).toEqual({
           _id:  expect.any(String),
           __v: 0,

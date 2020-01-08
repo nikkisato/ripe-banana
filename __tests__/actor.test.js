@@ -8,7 +8,7 @@ const Actor = require('../lib/models/Actor');
 const Studio = require('../lib/models/Studio');
 const Film = require('../lib/models/Film');
 const Reviewer = require('../lib/models/Reviewer');
-const Review = require('../lib/models/Review');
+// const Review = require('../lib/models/Review');
 
 const mongoose = require('mongoose');
 
@@ -20,8 +20,8 @@ describe('app routes', () => {
 
   let actor;
   let actors = [];
-  let film;
-  let films = [];
+  //   let film;
+  //   let films = [];
   let studio;
 
   beforeEach(() => {

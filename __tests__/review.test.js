@@ -23,6 +23,8 @@ describe('app routes', () => {
   let film;
   let films = [];
   let studio;
+  let review;
+  let reviews = [];
 
   beforeEach(() => {
     return mongoose.connection.dropDatabase();
@@ -53,6 +55,16 @@ describe('app routes', () => {
         company: 'Studio Ghibli'
       });
 
+    review = await Review 
+      .create({
+        rating: 3,
+        review: 'This was an interesting movie choice',
+        film: { 
+          // _id:
+          title: 'BABY YODA'
+        }
+      });
+
     film = await Film
       .create({
         title:'Godzilla',
@@ -67,50 +79,75 @@ describe('app routes', () => {
   afterAll(() => {
     return mongoose.connection.close();
   });
-  //Studio routes
-  it('can create studios names', () => {
+
+
+  //reviews routes
+  it.only('can create a new review', () => {
     return request(app)
-      .post('/studios') 
+      .post('/reviews')
       .send({
-        name:'Studio Ghibli',
+        rating: 3,
+        review: 'This was an interesting movie choice',
+        film: { 
+          // _id: expect.any(String),
+          title: 'BABY YODA'
+        }
       })
       .then(res => {
-        expect(res.body).toEqual[{
-          _id: expect.any(String),
-          name:'Studio Ghibli',
-          __v: 0
-        }];
+        expect(res.body).toEqual({
+          _id:  expect.any(String),
+          __v: 0,
+          rating: 3,
+          review: 'This was an interesting movie choice',
+          film: { 
+            _id:expect.any(String),
+            title: 'BABY YODA'
+          }
+        });
       });
   });
 
-  it('can get studios names', () => {
+  it('can get all reviews', () => {
     return request(app)
-      .get('/studios')
+      .get('/reviews')
       .then(res => {
-        expect(res.body).toEqual[{
-          _id: expect.any(String),
-          name:'Studio Ghibli',
-          __v: 0
-        }];
-      });
-  });
-
-  //need one for studio id
-  it('can get studios by id', () => {
-    return request(app)
-      .get(`/studios/${studio._id}`)
-      .then(res => {
-        expect(res.body).toEqual[{
-          _id: expect.any(String),
-          name:'Studio Ghibli',
-          address:'1 Chome-1-83 Shimorenjaku, Mitaka, Tokyo 181-0013, Japan',
-          films: [{
-          //changed this one
+        reviews.forEach(review => {
+          expect(res.body).toEqual({
+          // _id: film._id.toString(),
             _id: expect.any(String),
-            title: 'Godzilla'
-          }],
-          __v: 0
-        }];
+            __v: 0,
+            title:'BABY YODA',
+            released: 2020,
+            studio: studio._id,
+          });
+        });
       });
   });
+
+
+
+  it('can get review by id', () => {
+    return request(app)
+      .get(`/reviews/${review.id}`)
+      .then(res => {  
+        expect(res.body).toEqual({
+          _id: expect.any(String),
+          title: 'Godzilla',
+          released: 1964,
+          __v: 0,
+          studio: studio._id.toString(),
+          cast: [{ 
+            _id: expect.any(String),
+            role: 'Godzilla', 
+            actor: actor._id.toString() 
+          }],
+        });
+      });
+  });
+
+  
+
 });
+
+
+
