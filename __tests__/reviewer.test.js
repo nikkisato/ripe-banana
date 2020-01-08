@@ -110,7 +110,6 @@ describe('app routes', () => {
           _id: expect.any(String),
           name:'Hayao Miyazaki',
           company: 'Studio Ghibli',
-          //need to add reviews
           __v: 0
         }];
       });
