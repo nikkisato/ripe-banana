@@ -108,16 +108,15 @@ describe('app routes', () => {
     return request(app)
       .get(`/actors/${actor._id}`)
       .then(res => {
-        expect(res.body).toEqual({
+        expect(res.body).toMatchObject({
           _id: actor._id.toString(),
-          name:'Corgi Godzilla',
+          name: actor.name,
           dob: '1954-04-19T00:00:00.000Z',
           pob: 'Tokyo Japan',
-          // films: [{
-          //   _id:
-          //   title: 
-          //   released
-          // }]
+          films: [{ 
+            _id: expect.any(String), 
+            title: expect.any(String), 
+            released: expect.any(Number) }],
           __v: 0,
         });
       });
