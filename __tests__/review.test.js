@@ -82,7 +82,7 @@ describe('app routes', () => {
 
 
   //reviews routes
-  it.only('can create a new review', () => {
+  it('can create a new review', () => {
     return request(app)
       .post('/reviews')
       .send({
