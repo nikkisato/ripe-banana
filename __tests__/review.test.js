@@ -82,6 +82,7 @@ describe('app routes', () => {
   });
 
 
+
   //reviews routes
   it('can create a new review', () => {
     return request(app)
@@ -90,8 +91,7 @@ describe('app routes', () => {
         rating: 3,
         reviewer: reviewer._id,
         review: 'This was an interesting movie choice',
-        film: film._id.toString(),
-        _id: expect.any(String),
+        film: film._id,
       })
       .then(res => {
         console.log(res.body);
@@ -99,9 +99,9 @@ describe('app routes', () => {
           _id:  expect.any(String),
           __v: 0,
           rating: 3,
-          reviewer: reviewer._id,
+          reviewer: expect.any(String),
           review: 'This was an interesting movie choice',
-          film: film._id.toString()
+          film: expect.any(String)
         });
       });
   });
@@ -115,9 +115,6 @@ describe('app routes', () => {
             _id: expect.any(String),
             reviewer: reviewer._id,
             __v: 0,
-            // title:'BABY YODA',
-            // released: 2020,
-            // studio: studio._id,
           });
         });
       });
@@ -133,7 +130,7 @@ describe('app routes', () => {
           rating: 3,
           review: 'This was an interesting movie choice',
           film: film._id.toString(),
-          reviewer: reviewer._id,
+          reviewer: expect.any(String),
           _id: expect.any(String),
           __v: 0,
         });
