@@ -20,8 +20,6 @@ describe('app routes', () => {
 
   let actor;
   let actors = [];
-  //   let film;
-  //   let films = [];
   let studio;
 
   beforeEach(() => {

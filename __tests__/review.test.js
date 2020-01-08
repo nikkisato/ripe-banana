@@ -138,10 +138,39 @@ describe('app routes', () => {
       });
   });
 
+
+  it('can get update review by id', () => {
+    return request(app)
+      .patch(`/review/${review._id}`)
+      .send({ rating: 5 })
+      .then(res => {
+        expect(res.body).toEqual[{
+          _id: expect.any(String),
+          rating: 5,
+          review: expect.any(String),
+          film: JSON.parse(JSON.stringify(film)),
+          reviewer: JSON.parse(JSON.stringify(reviewer)),
+          __v: 0
+        }];
+      });
+  });
   
-console.log(
-  'Need to add a delete review'
-  )
+  it('can get delete Review by id', () => {
+    return request(app)
+      .delete(`/review/${review._id}`)
+      .then(res => {
+        expect(res.body).toEqual[{
+          _id: expect.any(String),
+          rating: 3,
+          review: expect.any(String),
+          film: JSON.parse(JSON.stringify(film)),
+          reviewer: JSON.parse(JSON.stringify(reviewer)),
+          __v: 0
+        }];
+      });
+  });
+  
+
 });
 
 
