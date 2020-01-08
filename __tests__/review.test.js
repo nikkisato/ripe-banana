@@ -126,19 +126,23 @@ describe('app routes', () => {
     return request(app)
       .get(`/reviews/${review.id}`)
       .then(res => {  
-        expect(res.body).toEqual({
-          rating: 3,
-          review: 'This was an interesting movie choice',
-          film: film._id.toString(),
-          reviewer: expect.any(String),
+        expect(res.body).toMatchObject({
           _id: expect.any(String),
+          rating: 3,
+          review: expect.any(String),
+          film: JSON.parse(JSON.stringify(film)),
+          reviewer: JSON.parse(JSON.stringify(reviewer)),
+     
           __v: 0,
         });
       });
   });
 
   
-
+console.log(
+  'Need to add a delete review
+  '
+)
 });
 
 
