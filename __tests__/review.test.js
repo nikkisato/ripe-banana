@@ -19,12 +19,14 @@ describe('app routes', () => {
 
 
   let actor;
-  let actors = [];
+  // let actors = [];
   let film;
-  let films = [];
+  // let films = [];
   let studio;
   let review;
   let reviews = [];
+  let reviewer;
+
 
   beforeEach(() => {
     return mongoose.connection.dropDatabase();
@@ -55,15 +57,6 @@ describe('app routes', () => {
         company: 'Studio Ghibli'
       });
 
-    review = await Review 
-      .create({
-        rating: 3,
-        review: 'This was an interesting movie choice',
-        film: { 
-          // _id:
-          title: 'BABY YODA'
-        }
-      });
 
     film = await Film
       .create({
@@ -73,6 +66,14 @@ describe('app routes', () => {
         cast: [{ 
           role: 'Godzilla', 
           actor: actor._id }]
+      });
+
+    review = await Review 
+      .create({
+        rating: 3,
+        review: 'This was an interesting movie choice',
+        film: film._id,
+        reviewer: reviewer._id,
       });
   });
 
@@ -87,22 +88,20 @@ describe('app routes', () => {
       .post('/reviews')
       .send({
         rating: 3,
+        reviewer: reviewer._id,
         review: 'This was an interesting movie choice',
-        film: { 
-          // _id: expect.any(String),
-          title: 'BABY YODA'
-        }
+        film: film._id.toString(),
+        _id: expect.any(String),
       })
       .then(res => {
+        console.log(res.body);
         expect(res.body).toEqual({
           _id:  expect.any(String),
           __v: 0,
           rating: 3,
+          reviewer: reviewer._id,
           review: 'This was an interesting movie choice',
-          film: { 
-            _id:expect.any(String),
-            title: 'BABY YODA'
-          }
+          film: film._id.toString()
         });
       });
   });
@@ -113,12 +112,12 @@ describe('app routes', () => {
       .then(res => {
         reviews.forEach(review => {
           expect(res.body).toEqual({
-          // _id: film._id.toString(),
             _id: expect.any(String),
+            reviewer: reviewer._id,
             __v: 0,
-            title:'BABY YODA',
-            released: 2020,
-            studio: studio._id,
+            // title:'BABY YODA',
+            // released: 2020,
+            // studio: studio._id,
           });
         });
       });
@@ -131,16 +130,12 @@ describe('app routes', () => {
       .get(`/reviews/${review.id}`)
       .then(res => {  
         expect(res.body).toEqual({
+          rating: 3,
+          review: 'This was an interesting movie choice',
+          film: film._id.toString(),
+          reviewer: reviewer._id,
           _id: expect.any(String),
-          title: 'Godzilla',
-          released: 1964,
           __v: 0,
-          studio: studio._id.toString(),
-          cast: [{ 
-            _id: expect.any(String),
-            role: 'Godzilla', 
-            actor: actor._id.toString() 
-          }],
         });
       });
   });
