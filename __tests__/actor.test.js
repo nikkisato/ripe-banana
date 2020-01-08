@@ -69,7 +69,7 @@ describe('app routes', () => {
   //actor routes
   it('can create a new actor', () => {
     return request(app)
-      .post('/actors')
+      .post('/api/v1/actors')
       .send({
         dob: '1954-04-19',
         pob: 'Tokyo Japan',
@@ -86,11 +86,10 @@ describe('app routes', () => {
 
       });
   });
- 
 
   it('can get all actors names', () => {
     return request(app)
-      .get('/actors')
+      .get('/api/v1/actors')
       .then(res => {
         actors.forEach(actor => {
           expect(res.body).toContain({
@@ -104,7 +103,7 @@ describe('app routes', () => {
 
   it('can  get actors names by Id', () => {
     return request(app)
-      .get(`/actors/${actor._id}`)
+      .get(`/api/v1/actors/${actor._id}`)
       .then(res => {
         expect(res.body).toMatchObject({
           _id: actor._id.toString(),
