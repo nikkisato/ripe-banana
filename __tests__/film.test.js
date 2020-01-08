@@ -40,10 +40,10 @@ describe('app routes', () => {
     studio = await Studio
       .create({
         name:'Studio Ghibli',
-        address:'1 Chome-1-83 Shimorenjaku, Mitaka, Tokyo 181-0013, Japan',
-        films: [{
-          _id: '1234',
-          title: 'Godzilla'
+        address:[{
+          city: 'Tokyo',
+          state: 'Japan',
+          country: 'Japan'
         }],
       });
 
@@ -96,13 +96,13 @@ describe('app routes', () => {
       .get('/films')
       .then(res => {
         films.forEach(film => {
-          expect(res.body).toEqual({
+          expect(res.body).toContainEqual({
           // _id: film._id.toString(),
             _id: expect.any(String),
             __v: 0,
             title:'Godzilla',
             released: 1964,
-            studio: studio._id,
+            studio: { _id: expect.any(String), name: expect.any(String), },
           });
         });
       });
@@ -116,15 +116,17 @@ describe('app routes', () => {
       .then(res => {  
         expect(res.body).toEqual({
           _id: expect.any(String),
-          title: 'Godzilla',
-          released: 1964,
+          title: expect.any(String),
+          released: expect.any(Number),
           __v: 0,
-          studio: studio._id.toString(),
+          studio: JSON.parse(JSON.stringify(studio)),
+          review: expect.any(Array),
           cast: [{ 
-            _id: expect.any(String),
-            role: 'Godzilla', 
+            _id: expect.any(String), 
+            role: expect.any(String),
             actor: actor._id.toString() 
           }],
+          
         });
       });
   });
