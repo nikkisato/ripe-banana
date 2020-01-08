@@ -29,6 +29,7 @@ describe('app routes', () => {
 
   });
 
+  let reviewer;
   beforeEach(async() => {
     actor = await Actor
       .create({
@@ -47,6 +48,7 @@ describe('app routes', () => {
         }],
       });
 
+   
     reviewer = await Reviewer 
       .create({
         name:'Hayao Miyazaki',
@@ -102,7 +104,7 @@ describe('app routes', () => {
 
   it('can get reviewers by id', () => {
     return request(app)
-      .get('/reviewer')
+      .get(`/reviewer/${reviewer._id}`)
       .then(res => {
         expect(res.body).toEqual[{
           _id: expect.any(String),
@@ -113,7 +115,32 @@ describe('app routes', () => {
         }];
       });
   });
-//need to add update and delete routes
 
+  it('can get update reviewers by id', () => {
+    return request(app)
+      .patch(`/reviewer/${reviewer._id}`)
+      .send({ name: 'bob' })
+      .then(res => {
+        expect(res.body).toEqual[{
+          _id: expect.any(String),
+          name:'Bob',
+          company: 'Studio Ghibli',
+          __v: 0
+        }];
+      });
+  });
+  
+  it('can get delete reviewers by id', () => {
+    return request(app)
+      .delete(`/reviewer/${reviewer._id}`)
+      .then(res => {
+        expect(res.body).toEqual[{
+          _id: expect.any(String),
+          name:'Hayao Miyazaki',
+          company: 'Studio Ghibli',
+          __v: 0
+        }];
+      });
+  });
 
 });
